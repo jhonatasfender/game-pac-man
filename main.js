@@ -35,6 +35,54 @@ pac.gHost=function(game,map,colour){
 		return moves[Math.floor(Math.random()*2)];
 	},
 	reset=function(){
-		
+		eaten=null;
+		eatable=null;
+		position={"x":90,"y":80};
+		direction=getRandomDirection();
+		due=getRandomDirection();
+	},
+	onWholeSquare=function(x){return x%10===0;},
+	oppositeDirection=function(dir){return dir===left&&right||dir===right&&left||dir===up&&down||up;},
+	makeEatable=function(){
+		direction=oppositeDirection(direction);
+		eatable=game.getTick();
+	},
+	eat=function(){
+		eatable=null;
+		eaten=game.getTick();
+	},
+	pointToCoord=function(x){return Math.round(x/10);},
+	nextSquare=function(x,dir){
+		var rem=x%10;
+		if(rem===0)
+			return x;
+		else if(dir===right||dir===down)
+			return x+(10-rem);
+		else
+			return x-rem;
+	},
+	onDridSquare=function(pos){return onWholeSquare(pos.y)&&onWholeSquare(pos.x);},
+	secondsAgo=function(tick){return (game.getTick()-tick)/pac.fps;},
+	getColour=function(){
+		if(eatable){
+			if(secondsAgo(eatable)>5)
+				return game.getTick()%20>10?"#FFFFFF":"#0000BB";
+			else
+				return "#0000BB";
+		}else if(eaten)
+			return "#222";
+		return colour;
+	},
+	draw(ctx){
+		var s=map.blockSize,top=(position.y/10)*s,left=(position.x/10)*s;
+		if(eatable && secondsAgo(eatable)>8)
+			eatable=null;
+		if(eaten&&secondsAgo(eatable)>8)
+			eatable=null;
+		if(eaten&&secondsAgo(eaten)>3)
+			eaten=null;
+		var tl=left+s,base=top+s-3,inc=s/10,high=game.getTick()%10>5?3:-3,low=game.getTick()%10>5?-3:3;
+		ctx.fillStyle=getColour();
+		ctx.beginPath();
 	},
 }
