@@ -35,6 +35,24 @@ pac.gHost=function(game,map,colour){
 		return moves[Math.floor(Math.random()*2)];
 	},
 	reset=function(){
+		eaten=null;
+		eatable=null;
+		position={"x":90,"y":80};
+		direction=getRandomDirection();
+		due=getRandomDirection();
+	},
+	onWholeSquare=function(x){return x%10===0;},
+	oppositeDirection=function(dir){return dir===left&&right||dir===right&&left||dir===up&&down||up;},
+	makeEatable=function(){
+		direction=oppositeDirection(direction);
+		eatable=game.getTick();
+	},
+	eat=function(){
+		eatable=null;
+		eaten=game.getTick();
+	},
+	pointToCoord=function(x){return Math.round(x/10);},
+	nextSquare=function(x,dir){
 		
 	},
 }
