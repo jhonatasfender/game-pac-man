@@ -84,5 +84,53 @@ pac.gHost=function(game,map,colour){
 		var tl=left+s,base=top+s-3,inc=s/10,high=game.getTick()%10>5?3:-3,low=game.getTick()%10>5?-3:3;
 		ctx.fillStyle=getColour();
 		ctx.beginPath();
+		ctx.moveTo(left,base);
+		ctx.quadraticCurveTo(left,top,left+(s/2),top);
+		ctx.quadraticCurveTo(left+s,top,left+s,base);
+		//Wavy things at the bottom
+		ctx.quadraticCurveTo(tl-(inc*1),base+high,t1-(inc*2),base);
+		ctx.quadraticCurveTo(tl-(inc*3),base+low,t1-(inc*4),base);
+		ctx.quadraticCurveTo(tl-(inc*5),base+high,t1-(inc*6),base);
+		ctx.quadraticCurveTo(tl-(inc*7),base+low,t1-(inc*8),base);
+		ctx.quadraticCurveTo(tl-(inc*9),base+high,t1-(inc*10),base);
+		ctx.closePath();
+		ctx.fill();
+		ctx.beginPath();
+		ctx.fillStyle="#FFF";
+		ctx.arc(left+6,top+6,s/6,0,300,false);
+		ctx.arc((left+s)-6,top+6,s/6,0,300,false);
+		ctx.closePath();
+		ctx.fill();
+		var f=s/12,off={};
+		off[right]=[f,0];
+		off[left]=[-f,0];
+		off[up]=[0,-f];
+		off[down]=[0,f];
+		ctx.beginPath();
+		ctx.fillStyle="#000";
+		ctx.arc(left+6+off[direction][0],top+6+off[direction][1],s/15,0,300,false);
+		ctx.arc((left+s)-6+off[direction][0],top+6+off[direction][1],s/15,0,300,false);
+		ctx.closePath();
+		ctx.fill();
+	},
+	pane=function(pos){
+		if(pos.y===100&&pos.x>=190&&direction===right)
+			return {"y":100,"x":-10};
+		if(pos.y===100&&pos.x<=-10&&direction===left)
+			return position={"y":100,"x":190};
+		return false;
+	},
+	move=function(ctx){
+		var oldPos=position,onGrid=onGridSquare(position),npos=null;
+		if(due!==direction){
+			npos=getNewCoord(due,position);
+			if(onGrid&&map.isFloorSpace({"y":pointToCoord(nextSquare(npos.y,due)),"x":pointToCoord(nextSquare(npos.x,due))}))
+				direction=due;
+			else
+				npos=null;
+			if(npos===null)
+				npos=getNewCoord(direction,position);
+			if()
+		}
 	},
 }
